@@ -6,8 +6,8 @@ targets:
     main: src/thumbnailer.cr
 
 dependencies:
-  cli:
-    github: devnote-dev/cli.cr
+  cling:
+    github: devnote-dev/cling
     branch: main
   pluto:
     github: phenopolis/pluto

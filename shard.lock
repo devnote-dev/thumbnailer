@@ -4,11 +4,11 @@ shards:
     git: https://github.com/crystal-ameba/ameba.git
     version: 1.3.1
 
-  cli:
-    git: https://github.com/devnote-dev/cli.cr.git
-    version: 2.0.1+git.commit.4455523400e1bfb9ee803f2529a5ce4e6fd8886f
+  cling:
+    git: https://github.com/devnote-dev/cling.git
+    version: 3.0.0-dev+git.commit.01d398fcaa17d5309235aad4f6f8f0a2ad91af5d
 
   pluto:
     git: https://github.com/phenopolis/pluto.git
-    version: 0.1.0+git.commit.4a7a432eab5bf27273cd27633dff81c33a3444f9
+    version: 0.1.0
 

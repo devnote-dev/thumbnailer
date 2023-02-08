@@ -1,18 +1,20 @@
-require "cli"
+require "cling"
 require "pluto"
 
-class Thumbnailer::MainCommand < CLI::Command
+class Thumbnailer::MainCommand < Cling::Command
   @path_arguments = Array(String).new
 
   def setup : Nil
     @name = "thumbnailer"
 
-    add_option "widths",
-      description: "Set widths to create thumbnails with (separated by comma)",
-      has_value: true
-    add_option "heights",
-      description: "Set heights to create thumbnails with (separated by comma)",
-      has_value: true
+    add_option "width",
+      description: "Set the width to create a thumbnail with, can be passed multiple times",
+      default: [] of String,
+      type: :array
+    add_option "height",
+      description: "Set the height to create a thumbnail with, can be passed multiple times",
+      default: [] of String,
+      type: :array
     add_option 'h', "help",
       description: "Show help information"
   end
@@ -49,7 +51,7 @@ class Thumbnailer::MainCommand < CLI::Command
     exit 1
   end
 
-  def pre_run(arguments : CLI::ArgumentsInput, options : CLI::OptionsInput) : Bool
+  def pre_run(arguments : Cling::Arguments, options : Cling::Options) : Bool
     if options.has? "help"
       puts help_template
 
@@ -59,21 +61,17 @@ class Thumbnailer::MainCommand < CLI::Command
     end
   end
 
-  def run(arguments : CLI::ArgumentsInput, options : CLI::OptionsInput) : Nil
+  def run(arguments : Cling::Arguments, options : Cling::Options) : Nil
     @path_arguments.each do |file_path|
       image = Pluto::Image.from_jpeg(File.read(file_path))
       ratios = Array(Float64).new
 
-      if options.has?("widths")
-        parse_sizes!(options.get!("widths")).each do |width|
-          ratios << image.width / width
-        end
+      options.get("width").as_a.each do |width|
+        ratios << image.width / width.to_i
       end
 
-      if options.has?("heights")
-        parse_sizes!(options.get!("heights")).each do |height|
-          ratios << image.height / height
-        end
+      options.get("height").as_a.each do |height|
+        ratios << image.height / height.to_i
       end
 
       ratios.each do |ratio|
@@ -88,10 +86,6 @@ class Thumbnailer::MainCommand < CLI::Command
 
   private def format(entries : Array(String)) : String
     entries.map { |entry| "`#{entry}`" }.join(", ")
-  end
-
-  private def parse_sizes!(value : CLI::Value) : Array(Int32)
-    value.to_s.split(',').map(&.to_i)
   end
 end
 
