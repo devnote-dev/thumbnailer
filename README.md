@@ -1,13 +1,13 @@
 # Thumbnailer
 
-A simple CLI tool to create image thumbnails. Made with [Pluto](https://github.com/phenopolis/pluto).
+A simple CLI tool to create image thumbnails. Made with [Cling](https://github.com/devnote-dev/cling) and [Pluto](https://github.com/phenopolis/pluto).
 
 Currently only JPEG is supported. More formats are planned.
 
 ## Usage
 
 ```
-thumbnailer *.jpg  --widths 100,200 --heights 300,400
+thumbnailer *.jpg --width 100 --width 200 --height 300 --height 400
 ```
 
 ## Contributing
