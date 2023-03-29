@@ -1,5 +1,6 @@
 require "cling"
 require "pluto"
+require "pluto/format/jpeg"
 
 class Thumbnailer::MainCommand < Cling::Command
   @path_arguments = Array(String).new
@@ -10,11 +11,11 @@ class Thumbnailer::MainCommand < Cling::Command
     add_option "width",
       description: "Set the width to create a thumbnail with, can be passed multiple times",
       default: [] of String,
-      type: :array
+      type: :multiple
     add_option "height",
       description: "Set the height to create a thumbnail with, can be passed multiple times",
       default: [] of String,
-      type: :array
+      type: :multiple
     add_option 'h', "help",
       description: "Show help information"
   end
@@ -63,7 +64,9 @@ class Thumbnailer::MainCommand < Cling::Command
 
   def run(arguments : Cling::Arguments, options : Cling::Options) : Nil
     @path_arguments.each do |file_path|
-      image = Pluto::Image.from_jpeg(File.read(file_path))
+      image = File.open(file_path) do |file|
+        Pluto::ImageRGBA.from_jpeg(file)
+      end
       ratios = Array(Float64).new
 
       options.get("width").as_a.each do |width|
@@ -79,7 +82,11 @@ class Thumbnailer::MainCommand < Cling::Command
         width = image.width // ratio
         height = image.height // ratio
         resized_image = image.bilinear_resize(width, height)
-        File.write("#{width}_#{height}_#{file_name}", resized_image.to_jpeg)
+
+        io = IO::Memory.new
+        resized_image.to_jpeg(io)
+        io.rewind
+        File.write("#{width}_#{height}_#{file_name}", io)
       end
     end
   end

@@ -8,15 +8,15 @@ targets:
 dependencies:
   cling:
     github: devnote-dev/cling
-    branch: main
+    version: ~> 3.0.0
   pluto:
     github: phenopolis/pluto
-    version: ~> 0.1.0
+    version: ~> 0.3.1
 
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 1.4.0
+    version: ~> 1.4.3
 
 crystal: 1.7.2
 
